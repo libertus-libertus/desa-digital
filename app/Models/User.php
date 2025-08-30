@@ -3,14 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Traits\UUID;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, UUID, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -44,5 +47,22 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // 1 User <-> hanya memiliki 1 Head of Family (kepala keluarga)
+    public function headOfFamily()
+    {
+        return $this->hasOne(HeadOfFamily::class);
+    }
+
+    // 1 user <-> hanya memiliki 1 Family Member (anggota keluarga)
+    public function familyMember()
+    {
+        return $this->hasOne(FamilyMember::class);
+    }
+
+    public function developmentApplicants()
+    {
+        return $this->hasMany(DevelopmentApplicant::class);
     }
 }
