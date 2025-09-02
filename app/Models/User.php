@@ -49,6 +49,15 @@ class User extends Authenticatable
         ];
     }
 
+    public function scopeSearch($query, $search)
+    {
+        // return $query->where('name', 'like', "%{$search}%")
+        //     ->orWhere('email', 'like', "%{$search}%");
+        
+        return $query->where('name', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%');
+    }
+
     // 1 User <-> hanya memiliki 1 Head of Family (kepala keluarga)
     public function headOfFamily()
     {
